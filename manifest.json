@@ -1,0 +1,14 @@
+{
+  "name": "WLED Sync",
+  "description": "Sync WLED lights with Spotify cover art colors",
+  "main": "wled.js",
+  "authors": [
+    {
+      "name": "Michel Ruwishka",
+      "url": "https://github.com/Michel2618"
+    }
+  ],
+  "versions": {
+    "0.1.0": "wled.js"
+  }
+}
