@@ -5,7 +5,6 @@ const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const PLAYER_ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing";
 
 // --- COLOR MATH ENGINE ---
-// Converts RGB to Hue, Saturation, Lightness
 function rgbToHsl(r: number, g: number, b: number) {
   r /= 255; g /= 255; b /= 255;
   const max = Math.max(r, g, b), min = Math.min(r, g, b);
@@ -24,7 +23,6 @@ function rgbToHsl(r: number, g: number, b: number) {
   return [h, s, l];
 }
 
-// Converts Hue, Saturation, Lightness back to RGB for WLED
 function hslToRgb(h: number, s: number, l: number) {
   let r, g, b;
   if (s === 0) {
@@ -92,24 +90,18 @@ export async function GET() {
     if (albumImageUrl) {
       try {
         const rawColor = await getAverageColor(albumImageUrl, {
-          algorithm: 'dominant',
-          ignoredColor: [0, 0, 0, 255, 80] // Still ignore pure black
+          algorithm: 'sqrt', // Changed to square-root averaging for the overall vibe
+          ignoredColor: [0, 0, 0, 255, 80] // Still perfectly ignoring the black shadows!
         });
         
-        // --- VIBRANCY BOOSTER ---
         let [h, s, l] = rgbToHsl(rawColor.value[0], rawColor.value[1], rawColor.value[2]);
         
-        // If the color is not completely grey/black/white
         if (s > 0.05) {
-          s = Math.max(s, 0.85); // Force saturation to at least 85% for deep colors
-          
-          // If the color is too pale (like your pink), darken it slightly to extract the pigment
+          s = Math.max(s, 0.85); 
           if (l > 0.6) l = 0.5; 
-          // If it's too dark, brighten it up
           if (l < 0.3) l = 0.4;
         }
 
-        // Convert the boosted color back to RGB for the LED strip
         dominantColor = hslToRgb(h, s, l);
         
       } catch (colorError) {
