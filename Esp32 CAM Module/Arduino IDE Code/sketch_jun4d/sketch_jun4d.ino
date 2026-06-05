@@ -5,9 +5,9 @@
 #include "soc/rtc_cntl_reg.h"  // Required for brownout detector bypass
 
 // --- Network Configuration ---
-const char* ssid     = "Michel, I Am Your Router (2.4G)";
-const char* password = "Youdontdeserve_2.4";
-const char* wled_ip  = "192.168.1.10"; 
+const char* ssid     = "*****************"; // Add your WIFI SSID here !
+const char* password = "***********"; // Add your WIFI password here !
+const char* wled_ip  = "192.168.***.***"; // Add your WLED IP address here !
 const uint16_t wled_port = 4048; 
 
 // --- LED Layout Configuration ---
