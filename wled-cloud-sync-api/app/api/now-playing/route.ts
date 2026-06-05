@@ -43,13 +43,16 @@ export async function GET() {
     const artist = song.item?.artists.map((_artist: any) => _artist.name).join(', ');
     const albumImageUrl = song.item?.album?.images[0]?.url;
 
-    // --- NEW SERVER-SAFE COLOR EXTRACTION LOGIC ---
     let dominantColor = [255, 255, 255]; 
 
     if (albumImageUrl) {
       try {
-        const color = await getAverageColor(albumImageUrl);
-        // The package returns an array like [R, G, B, Opacity], we just grab the first 3!
+        // --- FINE-TUNED COLOR ALGORITHM ---
+        const color = await getAverageColor(albumImageUrl, {
+          algorithm: 'dominant', // Hunts for the most prominent vibrant color
+          ignoredColor: [0, 0, 0, 255, 80] // [R, G, B, Alpha, Tolerance]. A tolerance of 80 completely ignores black/dark backgrounds!
+        });
+        
         dominantColor = [color.value[0], color.value[1], color.value[2]];
       } catch (colorError) {
         console.error("Failed to extract color:", colorError);
